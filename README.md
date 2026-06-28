@@ -1,6 +1,7 @@
 # 📈 Full-Stack Stock Trading Platform
 
-A modern full-stack stock trading platform inspired by Zerodha, built using the MERN Stack. The application provides secure user authentication, portfolio management, holdings, watchlists, positions, and a responsive trading dashboard with real-time stock market data.
+A modern full-stack stock trading platform![Uploading Screenshot (260).png…]()
+, built using the MERN Stack. The application provides secure user authentication, portfolio management, holdings, watchlists, positions, and a responsive trading dashboard with real-time stock market data.
 
 ---
 
@@ -132,38 +133,9 @@ JWT_SECRET=your_secret_key
 PORT=3001
 ```
 
----
 
-## Screenshots
 
-### Home Page
 
-(Add Screenshot Here)
-
----
-
-### Dashboard
-
-(Add Screenshot Here)
-
----
-
-### Portfolio
-
-(Add Screenshot Here)
-
----
-
-## Future Improvements
-
-- 📱 Mobile Responsive Design
-- 💳 Paper Trading
-- 📊 Advanced Stock Charts
-- 🔔 Real-Time Notifications
-- 🌙 Dark Mode
-- 📈 AI-Based Stock Prediction
-
----
 
 ## Author
 
