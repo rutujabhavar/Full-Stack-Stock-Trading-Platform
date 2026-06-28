@@ -1,7 +1,6 @@
 # 📈 Full-Stack Stock Trading Platform
 
-A modern full-stack stock trading platform![Uploading Screenshot (260).png…]()
-, built using the MERN Stack. The application provides secure user authentication, portfolio management, holdings, watchlists, positions, and a responsive trading dashboard with real-time stock market data.
+A modern full-stack stock trading platform, built using the MERN Stack. The application provides secure user authentication, portfolio management, holdings, watchlists, positions, and a responsive trading dashboard with real-time stock market data.
 
 ---
 
