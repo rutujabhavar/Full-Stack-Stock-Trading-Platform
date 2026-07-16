@@ -227,6 +227,17 @@ app.post("/newOrder", async (req, res) => {
 
 
 
+
+// ⬇️ ADD THE NEW ROUTE HERE
+app.get("/", (req, res) => {
+  res.send("Backend is running successfully 🚀");
+});
+
+
+
+
+
+
 app.listen(PORT, () => {
   console.log("App started!");
   mongoose.connect(uri);
