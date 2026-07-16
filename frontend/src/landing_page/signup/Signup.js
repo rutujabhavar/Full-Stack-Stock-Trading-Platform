@@ -28,7 +28,7 @@ function Signup() {
     try {
 
       const res = await axios.post(
-        "http://localhost:3002/api/auth/signup",
+       "https://full-stack-stock-trading-platform-ch4w.onrender.com/api/auth/signup",
         formData
       );
 

@@ -32,7 +32,7 @@ function Login() {
     try {
 
       const res = await axios.post(
-        "http://localhost:3002/api/auth/login",
+        "https://full-stack-stock-trading-platform-ch4w.onrender.com/api/auth/login",
         formData
       );
 
@@ -43,7 +43,7 @@ function Login() {
       alert("Login Successful!");
 
 
-      window.location.href = "http://localhost:3001";
+     window.location.href = "https://your-frontend-name.onrender.com";;
 
 
     } catch (err) {
