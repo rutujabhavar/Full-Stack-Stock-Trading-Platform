@@ -43,7 +43,7 @@ function Login() {
       alert("Login Successful!");
 
 
-    window.location.href = "https://full-stack-stock-trading-platform-dashboardpage.onrender.com";
+    window.location.href = "https://full-stack-stock-trading-platform-wj3r.onrender.com";;
 
 
     } catch (err) {
