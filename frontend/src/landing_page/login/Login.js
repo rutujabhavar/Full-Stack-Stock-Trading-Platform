@@ -32,7 +32,7 @@ function Login() {
     try {
 
       const res = await axios.post(
-        "https://full-stack-stock-trading-platform-ch4w.onrender.com/api/auth/login",
+       "https://full-stack-stock-trading-platform-s07k.onrender.com/api/auth/login",
         formData
       );
 
@@ -43,7 +43,7 @@ function Login() {
       alert("Login Successful!");
 
 
-    window.location.href = "https://full-stack-stock-trading-platform-wj3r.onrender.com";;
+   window.location.href = "https://full-stack-stock-trading-platform-pv1o.onrender.com";
 
 
     } catch (err) {
