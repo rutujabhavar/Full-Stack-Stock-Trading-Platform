@@ -12,7 +12,7 @@ const BuyActionWindow = ({ uid }) => {
   const [stockPrice, setStockPrice] = useState(0.0);
 
   const handleBuyClick = () => {
-    axios.post("https://full-stack-stock-trading-platform-ch4w.onrender.com/newOrder", ... {
+    axios.post("https://full-stack-stock-trading-platform-s07k.onrender.com/newOrder", ... {
       name: uid,
       qty: stockQuantity,
       price: stockPrice,
