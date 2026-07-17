@@ -133,8 +133,11 @@ PORT=3001
 ```
 
 
+## 🌐 Live Demo
 
+**Live Application:**  https://full-stack-stock-trading-platform-hjoy.onrender.com/
 
+---
 
 ## Author
 
