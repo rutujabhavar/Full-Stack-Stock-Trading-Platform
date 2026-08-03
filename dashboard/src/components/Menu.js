@@ -159,7 +159,8 @@ if (userFromUrl) {
         onClick={() => {
           localStorage.removeItem("user");
           localStorage.removeItem("token");
-          window.location.href = "http://localhost:3000/login";
+       window.location.href =
+"https://full-stack-stock-trading-platform-4jqh.onrender.com/login";
         }}
       >
         🚪 Logout
