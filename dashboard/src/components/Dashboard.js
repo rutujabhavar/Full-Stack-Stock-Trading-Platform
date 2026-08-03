@@ -15,6 +15,8 @@ import Profile from "./Profile";
 import Account from "./Account";
 import Settings from "./Settings";
 
+import Login from "../../../frontend/src/landing_page/login/Login.js";
+
 
 
 const Dashboard = () => {
@@ -37,6 +39,7 @@ const Dashboard = () => {
           <Route path="/profile" element={<Profile />} />
 <Route path="/account" element={<Account />} />
 <Route path="/settings" element={<Settings />} />
+<Route path="/login" element={<Login />} />
 
 
         </Routes>
