@@ -1,142 +1,115 @@
-//import React, { useEffect, useState } from "react";
-//import { Link } from "react-router-dom";
-//import axios from "axios";
+const express = require("express");
+const router = express.Router();
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-const Menu = () => {
-  const [selectedMenu, setSelectedMenu] = useState(0);
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const [user, setUser] = useState(null);
+const User = require("../model/User"); // Change this path if your User model is elsewhere
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem("token");
+// Signup
+router.post("/signup", async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
 
-        if (!token) return;
+    const existingUser = await User.findOne({ email });
 
-        const res = await axios.get(
-          "http://localhost:3002/api/auth/me",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+    if (existingUser) {
+      return res.status(400).json({
+        message: "User already exists",
+      });
+    }
 
-        setUser(res.data);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-      } catch (err) {
-        console.log(err);
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    await user.save();
+
+    res.status(201).json({
+      message: "Signup successful",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+});
+
+// Login
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid Email or Password",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Invalid Email or Password",
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT_SECRET || "secretkey",
+      {
+        expiresIn: "7d",
       }
-    };
+    );
 
-    fetchUser();
-  }, []);
+    res.json({
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+});
 
-  const handleMenuClick = (index) => {
-    setSelectedMenu(index);
-  };
+// Get logged-in user
+router.get("/me", async (req, res) => {
+  try {
+    const token = req.header("Authorization")?.replace("Bearer ", "");
 
-  const handleProfileClick = () => {
-    setIsProfileDropdownOpen(!isProfileDropdownOpen);
-  };
+    if (!token) {
+      return res.status(401).json({
+        message: "No token",
+      });
+    }
 
-  const menuClass = "menu";
-  const activeMenuClass = "menu selected";
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "secretkey"
+    );
 
-  return (
-    <div className="menu-container">
-      <img src="logo.png" alt="Logo" style={{ width: "50px" }} />
+    const user = await User.findById(decoded.id).select("-password");
 
-      <div className="menus">
-        <ul>
-          <li>
-            <Link
-              style={{ textDecoration: "none" }}
-              to="/"
-              onClick={() => handleMenuClick(0)}
-            >
-              <p className={selectedMenu === 0 ? activeMenuClass : menuClass}>
-                Dashboard
-              </p>
-            </Link>
-          </li>
+    res.json(user);
+  } catch (err) {
+    res.status(401).json({
+      message: "Invalid token",
+    });
+  }
+});
 
-          <li>
-            <Link
-              style={{ textDecoration: "none" }}
-              to="/orders"
-              onClick={() => handleMenuClick(1)}
-            >
-              <p className={selectedMenu === 1 ? activeMenuClass : menuClass}>
-                Orders
-              </p>
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              style={{ textDecoration: "none" }}
-              to="/holdings"
-              onClick={() => handleMenuClick(2)}
-            >
-              <p className={selectedMenu === 2 ? activeMenuClass : menuClass}>
-                Holdings
-              </p>
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              style={{ textDecoration: "none" }}
-              to="/positions"
-              onClick={() => handleMenuClick(3)}
-            >
-              <p className={selectedMenu === 3 ? activeMenuClass : menuClass}>
-                Positions
-              </p>
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              style={{ textDecoration: "none" }}
-              to="/funds"
-              onClick={() => handleMenuClick(4)}
-            >
-              <p className={selectedMenu === 4 ? activeMenuClass : menuClass}>
-                Funds
-              </p>
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              style={{ textDecoration: "none" }}
-              to="/apps"
-              onClick={() => handleMenuClick(5)}
-            >
-              <p className={selectedMenu === 5 ? activeMenuClass : menuClass}>
-                Apps
-              </p>
-            </Link>
-          </li>
-        </ul>
-
-        <hr />
-
-        <div className="profile" onClick={handleProfileClick}>
-          <div className="avatar">
-            {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
-          </div>
-
-          <p className="username">
-            {user?.name || "User"}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Menu;
+module.exports = router;
