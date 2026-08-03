@@ -15,8 +15,8 @@ import Profile from "./Profile";
 import Account from "./Account";
 import Settings from "./Settings";
 
-import Login from "../../../frontend/src/landing_page/login/Login.js";
 
+import Settings from "./Login";
 
 
 const Dashboard = () => {
