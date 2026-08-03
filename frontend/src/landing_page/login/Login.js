@@ -2,74 +2,69 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-
 function Login() {
-
   const navigate = useNavigate();
-
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-
   const handleChange = (e) => {
-
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-
   };
 
-
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
-
     try {
-
       const res = await axios.post(
-       "https://full-stack-stock-trading-platform-s07k.onrender.com/api/auth/login",
+        "http://localhost:3002/api/auth/login",
         formData
       );
 
+         console.log("Response from backend:", res.data);
+console.log("Logged in user:", res.data.user);                       // <-- Add this line
 
+      // Save JWT
       localStorage.setItem("token", res.data.token);
 
+      // Save logged-in user details
+     localStorage.setItem("user", JSON.stringify(res.data.user));
+
+     
+
+
+
+//console.log("Saved user:", localStorage.getItem("user"));
+
+
+
+alert("Login Successful!");
 
       alert("Login Successful!");
 
+      // Redirect to dashboard
+     window.location.href =
+  `http://localhost:3001?user=${encodeURIComponent(
+    JSON.stringify(res.data.user)
+  )}`;
 
-   window.location.href = "https://full-stack-stock-trading-platform-pv1o.onrender.com";
-
+      // OR if you're using React Router:
+      // navigate("/dashboard");
 
     } catch (err) {
-
-      alert(
-        err.response?.data?.message || "Login Failed"
-      );
-
+      alert(err.response?.data?.message || "Login Failed");
     }
-
   };
 
-
   return (
-
     <div className="auth-container">
-
-
-      <form 
-        onSubmit={handleSubmit} 
-        className="auth-form"
-      >
-
-
+      <form onSubmit={handleSubmit} className="auth-form">
         <h2>Login</h2>
-
 
         <input
           type="email"
@@ -77,8 +72,8 @@ function Login() {
           placeholder="Enter Email"
           value={formData.email}
           onChange={handleChange}
+          required
         />
-
 
         <input
           type="password"
@@ -86,21 +81,13 @@ function Login() {
           placeholder="Enter Password"
           value={formData.password}
           onChange={handleChange}
+          required
         />
 
-
-        <button type="submit">
-          Login
-        </button>
-
-
+        <button type="submit">Login</button>
       </form>
-
-
     </div>
-
   );
 }
-
 
 export default Login;

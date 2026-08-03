@@ -1,89 +1,142 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-const User = require("../model/User");
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
-const router = express.Router();
+const Menu = () => {
+  const [selectedMenu, setSelectedMenu] = useState(0);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
-router.post("/signup", async (req, res) => {
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-    try {
+        if (!token) return;
 
-        const { name, email, password } = req.body;
-
-        const existingUser = await User.findOne({ email });
-
-        if(existingUser){
-            return res.status(400).json({
-                message: "User already exists"
-            });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const user = await User.create({
-            name,
-            email,
-            password: hashedPassword
-        });
-
-        res.status(201).json({
-            success: true,
-            user
-        });
-
-    } catch(err){
-        res.status(500).json({
-            message: err.message
-        });
-    }
-});
-
-module.exports = router;
-
-//login api 
-
-const jwt = require("jsonwebtoken");
-
-router.post("/login", async (req, res) => {
-
-    try {
-
-        const { email, password } = req.body;
-
-        const user = await User.findOne({ email });
-
-        if(!user){
-            return res.status(400).json({
-                message: "User not found"
-            });
-        }
-
-        const isMatch = await bcrypt.compare(
-            password,
-            user.password
+        const res = await axios.get(
+          "http://localhost:3002/api/auth/me",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
-        if(!isMatch){
-            return res.status(400).json({
-                message: "Invalid credentials"
-            });
-        }
+        setUser(res.data);
 
-        const token = jwt.sign(
-            { id: user._id },
-            "SECRET_KEY",
-            { expiresIn: "7d" }
-        );
+      } catch (err) {
+        console.log(err);
+      }
+    };
 
-        res.status(200).json({
-            success: true,
-            token,
-            user
-        });
+    fetchUser();
+  }, []);
 
-    } catch(err){
-        res.status(500).json({
-            message: err.message
-        });
-    }
-});
+  const handleMenuClick = (index) => {
+    setSelectedMenu(index);
+  };
+
+  const handleProfileClick = () => {
+    setIsProfileDropdownOpen(!isProfileDropdownOpen);
+  };
+
+  const menuClass = "menu";
+  const activeMenuClass = "menu selected";
+
+  return (
+    <div className="menu-container">
+      <img src="logo.png" alt="Logo" style={{ width: "50px" }} />
+
+      <div className="menus">
+        <ul>
+          <li>
+            <Link
+              style={{ textDecoration: "none" }}
+              to="/"
+              onClick={() => handleMenuClick(0)}
+            >
+              <p className={selectedMenu === 0 ? activeMenuClass : menuClass}>
+                Dashboard
+              </p>
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              style={{ textDecoration: "none" }}
+              to="/orders"
+              onClick={() => handleMenuClick(1)}
+            >
+              <p className={selectedMenu === 1 ? activeMenuClass : menuClass}>
+                Orders
+              </p>
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              style={{ textDecoration: "none" }}
+              to="/holdings"
+              onClick={() => handleMenuClick(2)}
+            >
+              <p className={selectedMenu === 2 ? activeMenuClass : menuClass}>
+                Holdings
+              </p>
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              style={{ textDecoration: "none" }}
+              to="/positions"
+              onClick={() => handleMenuClick(3)}
+            >
+              <p className={selectedMenu === 3 ? activeMenuClass : menuClass}>
+                Positions
+              </p>
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              style={{ textDecoration: "none" }}
+              to="/funds"
+              onClick={() => handleMenuClick(4)}
+            >
+              <p className={selectedMenu === 4 ? activeMenuClass : menuClass}>
+                Funds
+              </p>
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              style={{ textDecoration: "none" }}
+              to="/apps"
+              onClick={() => handleMenuClick(5)}
+            >
+              <p className={selectedMenu === 5 ? activeMenuClass : menuClass}>
+                Apps
+              </p>
+            </Link>
+          </li>
+        </ul>
+
+        <hr />
+
+        <div className="profile" onClick={handleProfileClick}>
+          <div className="avatar">
+            {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+          </div>
+
+          <p className="username">
+            {user?.name || "User"}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Menu;
