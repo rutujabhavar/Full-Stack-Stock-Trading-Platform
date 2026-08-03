@@ -16,7 +16,7 @@ import Account from "./Account";
 import Settings from "./Settings";
 
 
-import Settings from "./Login";
+
 
 
 const Dashboard = () => {
@@ -39,7 +39,7 @@ const Dashboard = () => {
           <Route path="/profile" element={<Profile />} />
 <Route path="/account" element={<Account />} />
 <Route path="/settings" element={<Settings />} />
-<Route path="/login" element={<Login />} />
+
 
 
         </Routes>
