@@ -50,7 +50,7 @@ alert("Login Successful!");
 
       // Redirect to dashboard
     window.location.href =
-  `https://tradex-stock-trading-platform.onrender.com?user=${encodeURIComponent(
+  `https://dashboard-tradex-stock-trading-platform.onrender.com?user=${encodeURIComponent(
     JSON.stringify(res.data.user)
   )}`;
 
