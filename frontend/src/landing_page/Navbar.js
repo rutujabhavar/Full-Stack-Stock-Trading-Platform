@@ -35,6 +35,16 @@ function Navbar() {
                   Signup
                 </Link>
               </li>
+
+
+
+<li class="nav-item">
+  <Link class="nav-link active" to="/login">
+    Sign In
+  </Link>
+</li>
+
+
               <li class="nav-item">
                 <Link class="nav-link active" to="/about">
                   About

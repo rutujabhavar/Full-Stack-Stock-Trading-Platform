@@ -25,12 +25,11 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-
-      const res = await axios.post(
-      "  https://full-stack-stock-trading-platform-2zk9.onrender.com/api/auth/signup",
-        formData
-      );
+  try {
+  const res = await axios.post(
+    "https://full-stack-stock-trading-platform-2zk9.onrender.com/api/auth/signup",
+    formData
+  );
 
 
       alert("Signup Successful!");
