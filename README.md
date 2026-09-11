@@ -135,7 +135,7 @@ PORT=3001
 
 ## 🌐 Live Demo
 
-**Live Application:**  https://full-stack-stock-trading-platform-hjoy.onrender.com/
+**Live Application:**  https://frontend-tradex-stock-trading-platform.onrender.com
 
 ---
 

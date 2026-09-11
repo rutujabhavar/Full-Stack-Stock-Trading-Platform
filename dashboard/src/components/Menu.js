@@ -160,7 +160,7 @@ if (userFromUrl) {
           localStorage.removeItem("user");
           localStorage.removeItem("token");
        window.location.href =
-"https://full-stack-stock-trading-platform-4jqh.onrender.com";
+"https://tradex-stock-trading-platform.onrender.com";
         }}
       >
         🚪 Logout
