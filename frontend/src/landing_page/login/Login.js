@@ -46,7 +46,6 @@ console.log("Logged in user:", res.data.user);                       // <-- Add 
 
 alert("Login Successful!");
 
-      alert("Login Successful!");
 
       // Redirect to dashboard
     window.location.href =
