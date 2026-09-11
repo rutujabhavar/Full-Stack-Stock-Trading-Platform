@@ -20,11 +20,12 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await axios.post(
-       "https://full-stack-stock-trading-platform-2zk9.onrender.com/api/auth/login",
-        formData
-      );
+   try {
+  const res = await axios.post(
+    "https://full-stack-stock-trading-platform-2zk9.onrender.com/api/auth/login",
+    formData
+  );
+  
 
          console.log("Response from backend:", res.data);
 console.log("Logged in user:", res.data.user);                       // <-- Add this line

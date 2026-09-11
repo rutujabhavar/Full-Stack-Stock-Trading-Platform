@@ -23,7 +23,7 @@ function Team() {
 
         <div className="col-6 p-3">
           <p>
-            Rutuja bootstrapped and founded Zerodha-Stock Trading Platform in
+            Rutuja bootstrapped and founded TradeX-Stock Trading Platform in
             2026 to overcome the hurdles faced during the journey of building a
             modern stock trading platform.
           </p>
