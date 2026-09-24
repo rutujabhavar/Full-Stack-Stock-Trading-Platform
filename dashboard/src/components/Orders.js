@@ -10,7 +10,7 @@ const Orders = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3002/allOrders"
+          "https://tradex-stock-trading-platform.onrender.com/allOrders"
         );
 
         console.log("Orders:", response.data);

@@ -14,7 +14,7 @@ const Funds = () => {
   const fetchFunds = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3002/funds"
+        "https://tradex-stock-trading-platform.onrender.com/funds"
       );
 
       console.log("Funds:", response.data);
@@ -61,7 +61,7 @@ const Funds = () => {
       setProcessing(true);
 
       const response = await axios.post(
-        "http://localhost:3002/addFunds",
+        "https://tradex-stock-trading-platform.onrender.com/addFunds",
         {
           amount: enteredAmount,
         }
@@ -105,7 +105,7 @@ const Funds = () => {
       setProcessing(true);
 
       const response = await axios.post(
-        "http://localhost:3002/withdrawFunds",
+        "https://tradex-stock-trading-platform.onrender.com/withdrawFunds",
         {
           amount: enteredAmount,
         }
