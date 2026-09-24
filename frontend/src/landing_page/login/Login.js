@@ -22,7 +22,7 @@ function Login() {
 
    try {
   const res = await axios.post(
-   "https://tradex-stock-trading-platform.onrender.com/api/auth/login",
+"http://localhost:3002/api/auth/login",
     formData
   );
   
@@ -49,7 +49,7 @@ alert("Login Successful!");
 
       // Redirect to dashboard
     window.location.href =
-  `https://dashboard-tradex-stock-trading-platform.onrender.com?user=${encodeURIComponent(
+  `http://localhost:3001?user=${encodeURIComponent(
     JSON.stringify(res.data.user)
   )}`;
 

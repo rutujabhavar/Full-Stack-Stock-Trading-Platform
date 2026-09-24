@@ -1,142 +1,333 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Funds = () => {
-  const [balance, setBalance] = useState(4043.10);
+  const [funds, setFunds] = useState(null);
   const [amount, setAmount] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState(false);
+
+  // ==========================================
+  // FETCH FUNDS
+  // ==========================================
+
+  const fetchFunds = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3002/funds"
+      );
+
+      console.log("Funds:", response.data);
+
+      setFunds(response.data);
+    } catch (error) {
+      console.error("Error fetching funds:", error);
+
+      alert(
+        "Unable to fetch funds. Please check your backend."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const savedBalance = localStorage.getItem("balance");
-
-    if (savedBalance) {
-      setBalance(Number(savedBalance));
-    }
+    fetchFunds();
   }, []);
 
-  const addFunds = () => {
-    if (!amount || Number(amount) <= 0) {
-      alert("Enter a valid amount");
-      return;
-    }
 
-    const newBalance = balance + Number(amount);
+  // ==========================================
+  // FORMAT MONEY
+  // ==========================================
 
-    setBalance(newBalance);
-    localStorage.setItem("balance", newBalance);
-
-    alert("Funds Added Successfully!");
-
-    setAmount("");
+  const formatMoney = (value) => {
+    return `₹${Number(value || 0).toFixed(2)}`;
   };
 
-  const withdrawFunds = () => {
-    if (!amount || Number(amount) <= 0) {
-      alert("Enter a valid amount");
+
+  // ==========================================
+  // ADD FUNDS
+  // ==========================================
+
+  const handleAddFunds = async () => {
+    const enteredAmount = Number(amount);
+
+    if (!enteredAmount || enteredAmount <= 0) {
+      alert("Please enter a valid amount.");
       return;
     }
 
-    if (Number(amount) > balance) {
-      alert("Insufficient Balance");
-      return;
+    try {
+      setProcessing(true);
+
+      const response = await axios.post(
+        "http://localhost:3002/addFunds",
+        {
+          amount: enteredAmount,
+        }
+      );
+
+      console.log("Add Funds:", response.data);
+
+      setFunds(response.data.funds);
+
+      setAmount("");
+
+      alert(
+        `₹${enteredAmount.toFixed(2)} added successfully!`
+      );
+    } catch (error) {
+      console.error("Add funds error:", error);
+
+      alert(
+        error.response?.data?.message ||
+          "Failed to add funds."
+      );
+    } finally {
+      setProcessing(false);
     }
-
-    const newBalance = balance - Number(amount);
-
-    setBalance(newBalance);
-    localStorage.setItem("balance", newBalance);
-
-    alert("Withdrawal Successful!");
-
-    setAmount("");
   };
+
+
+  // ==========================================
+  // WITHDRAW FUNDS
+  // ==========================================
+
+  const handleWithdraw = async () => {
+    const enteredAmount = Number(amount);
+
+    if (!enteredAmount || enteredAmount <= 0) {
+      alert("Please enter a valid amount.");
+      return;
+    }
+
+    try {
+      setProcessing(true);
+
+      const response = await axios.post(
+        "http://localhost:3002/withdrawFunds",
+        {
+          amount: enteredAmount,
+        }
+      );
+
+      console.log("Withdraw:", response.data);
+
+      setFunds(response.data.funds);
+
+      setAmount("");
+
+      alert(
+        `₹${enteredAmount.toFixed(2)} withdrawn successfully!`
+      );
+    } catch (error) {
+      console.error("Withdraw error:", error);
+
+      alert(
+        error.response?.data?.message ||
+          "Failed to withdraw funds."
+      );
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+
+  // ==========================================
+  // LOADING
+  // ==========================================
+
+  if (loading) {
+    return (
+      <div className="funds">
+        <h2>Loading Funds...</h2>
+      </div>
+    );
+  }
+
+
+  // ==========================================
+  // ERROR
+  // ==========================================
+
+  if (!funds) {
+    return (
+      <div className="funds">
+        <h2>Unable to load funds</h2>
+
+        <button
+          className="btn"
+          onClick={fetchFunds}
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+
+  // ==========================================
+  // UI
+  // ==========================================
 
   return (
-    <>
-      <div className="funds">
+    <div className="funds">
 
-        <p>Instant, zero-cost fund transfers with UPI</p>
+      {/* ==========================================
+          ADD / WITHDRAW FUNDS
+      ========================================== */}
+
+      <div className="funds-actions">
+
+        <div className="funds-action-text">
+          Instant, zero-cost fund transfers with UPI
+        </div>
 
         <input
           type="number"
           placeholder="Enter Amount"
+          className="fund-input"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={(e) =>
+            setAmount(e.target.value)
+          }
+          min="1"
         />
 
-        <button className="btn btn-green" onClick={addFunds}>
-          Add Funds
+        <button
+          className="btn btn-green"
+          onClick={handleAddFunds}
+          disabled={processing}
+        >
+          {processing ? "Processing..." : "Add Funds"}
         </button>
 
-        <button className="btn btn-blue" onClick={withdrawFunds}>
-          Withdraw
+        <button
+          className="btn btn-blue"
+          onClick={handleWithdraw}
+          disabled={processing}
+        >
+          {processing ? "Processing..." : "Withdraw"}
         </button>
 
       </div>
 
-      <div className="row">
 
-        <div className="col">
+      {/* ==========================================
+          EQUITY
+      ========================================== */}
 
-          <span>
-            <p>Equity</p>
-          </span>
+      <h3 className="title">
+        Equity
+      </h3>
 
-          <div className="table">
 
-            <div className="data">
-              <p>Available Margin</p>
-              <p className="imp colored">
-                ₹ {balance.toFixed(2)}
-              </p>
-            </div>
+      <div className="funds-container">
 
-            <div className="data">
-              <p>Used Margin</p>
-              <p className="imp">₹ 3757.30</p>
-            </div>
+        {/* ==========================================
+            FUNDS CARD
+        ========================================== */}
 
-            <div className="data">
-              <p>Available Cash</p>
-              <p className="imp">
-                ₹ {balance.toFixed(2)}
-              </p>
-            </div>
+        <div className="funds-card">
 
-            <hr />
+          <div className="fund-row">
+            <span>
+              Available Balance
+            </span>
 
-            <div className="data">
-              <p>Opening Balance</p>
-              <p>₹ 4043.10</p>
-            </div>
+            <strong>
+              {formatMoney(
+                funds.availableBalance
+              )}
+            </strong>
+          </div>
 
-            <div className="data">
-              <p>Collateral</p>
-              <p>₹ 0.00</p>
-            </div>
 
+          <div className="fund-row">
+            <span>
+              Used Margin
+            </span>
+
+            <strong>
+              {formatMoney(
+                funds.usedMargin
+              )}
+            </strong>
+          </div>
+
+
+          <div className="fund-row">
+            <span>
+              Total Balance
+            </span>
+
+            <strong>
+              {formatMoney(
+                funds.totalBalance
+              )}
+            </strong>
+          </div>
+
+
+          <hr />
+
+
+          <div className="fund-row">
+            <span>
+              Available Cash
+            </span>
+
+            <strong>
+              {formatMoney(
+                funds.availableBalance
+              )}
+            </strong>
+          </div>
+
+
+          <div className="fund-row">
+            <span>
+              Opening Balance
+            </span>
+
+            <strong>
+              ₹1,00,000.00
+            </strong>
+          </div>
+
+
+          <div className="fund-row">
+            <span>
+              Collateral
+            </span>
+
+            <strong>
+              ₹0.00
+            </strong>
           </div>
 
         </div>
 
-        <div className="col">
 
-          <div className="commodity">
+        {/* ==========================================
+            COMMODITY CARD
+        ========================================== */}
 
-            <p>You don't have a commodity account.</p>
+        <div className="commodity-card">
 
-            <button
-              className="btn btn-blue"
-              onClick={() => alert("Commodity Account Opening Coming Soon")}
-            >
-              Open Account
-            </button>
+          <p>
+            You don't have a commodity account.
+          </p>
 
-          </div>
+          <button className="btn btn-blue">
+            Open Account
+          </button>
 
         </div>
 
       </div>
-    </>
+
+    </div>
   );
 };
 

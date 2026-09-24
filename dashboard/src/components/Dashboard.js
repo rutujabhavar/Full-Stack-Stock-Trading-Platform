@@ -8,13 +8,13 @@ import Orders from "./Orders";
 import Positions from "./Positions";
 import Summary from "./Summary";
 import WatchList from "./WatchList";
+import Analytics from "./Analytics";
 import { GeneralContextProvider } from "./GeneralContext";
 
 //USER PROFILE SECTION
 import Profile from "./Profile";
 import Account from "./Account";
 import Settings from "./Settings";
-
 
 
 
@@ -32,6 +32,7 @@ const Dashboard = () => {
           <Route path="/holdings" element={<Holdings />} />
           <Route path="/positions" element={<Positions />} />
           <Route path="/funds" element={<Funds />} />
+          <Route path="/analytics/:symbol" element={<Analytics />} />
       
 
 

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 import GeneralContext from "./GeneralContext";
 
 import { Tooltip, Grow } from "@mui/material";
@@ -131,9 +131,18 @@ const WatchListItem = ({ stock }) => {
 
 const WatchListActions = ({ uid }) => {
   const generalContext = useContext(GeneralContext);
+  const navigate = useNavigate();
 
   const handleBuyClick = () => {
     generalContext.openBuyWindow(uid);
+  };
+
+  const handleSellClick = () => {
+    generalContext.openSellWindow(uid);
+  };
+
+  const handleAnalyticsClick = () => {
+    navigate(`/analytics/${uid}`);
   };
 
   return (
@@ -148,29 +157,30 @@ const WatchListActions = ({ uid }) => {
         >
           <button className="buy">Buy</button>
         </Tooltip>
+
         <Tooltip
           title="Sell (S)"
           placement="top"
           arrow
           TransitionComponent={Grow}
+          onClick={handleSellClick}
         >
           <button className="sell">Sell</button>
         </Tooltip>
+
         <Tooltip
           title="Analytics (A)"
           placement="top"
           arrow
           TransitionComponent={Grow}
+          onClick={handleAnalyticsClick}
         >
           <button className="action">
             <BarChartOutlined className="icon" />
           </button>
         </Tooltip>
-        <Tooltip title="More" placement="top" arrow TransitionComponent={Grow}>
-          <button className="action">
-            <MoreHoriz className="icon" />
-          </button>
-        </Tooltip>
+
+       
       </span>
     </span>
   );

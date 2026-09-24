@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const mongoose = require("mongoose");
 const User = require("../model/User"); // Change this path if your User model is elsewhere
 
 // Signup
@@ -27,6 +27,12 @@ router.post("/signup", async (req, res) => {
     });
 
     await user.save();
+
+console.log("USER STORED SUCCESSFULLY:");
+console.log("ID:", user._id);
+console.log("Name:", user.name);
+console.log("Email:", user.email);
+console.log("Database:", mongoose.connection.name);
 
     res.status(201).json({
       message: "Signup successful",
